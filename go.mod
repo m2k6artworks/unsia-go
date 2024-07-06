@@ -4,6 +4,7 @@ go 1.22.3
 
 require (
 	github.com/GuiaBolso/darwin v0.0.0-20191218124601-fd6d2aa3d244
+	github.com/lib/pq v1.10.9
 	google.golang.org/grpc v1.64.0
 	google.golang.org/protobuf v1.34.2
 )

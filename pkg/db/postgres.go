@@ -17,7 +17,7 @@ func OpenDB() (*sql.DB, error) {
 	return sql.Open("postgres",
 		fmt.Sprintf(
 			"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-			"localhost", port, "postgres", "pass", "unsia_go",
+			"localhost", port, "postgres", "gymkhana5", "unsia_go",
 		),
 	)
 

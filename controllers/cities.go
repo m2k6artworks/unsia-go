@@ -36,3 +36,9 @@ func (s *City) GetCities(in *cities.EmptyMessage, stream cities.CitiesService_Ge
 	}
 	return nil
 }
+
+func (s *City) Create(ctx context.Context, in *cities.CityInput) (*cities.City, error) {
+	var cityModel models.City
+	err := cityModel.Create(ctx, s.DB, in)
+	return &cityModel.Pb, err
+}

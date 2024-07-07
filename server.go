@@ -2,10 +2,13 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net"
 	"unsia/controllers"
 	"unsia/pb/cities"
+	database "unsia/pkg/db"
 
+	_ "github.com/lib/pq"
 	"google.golang.org/grpc"
 )
 
@@ -16,9 +19,15 @@ func main() {
 		return
 	}
 
+	db, err := database.OpenDB()
+	if err != nil {
+		log.Fatalf("error: connecting to db: %s", err)
+	}
+	defer db.Close()
+
 	grpcServer := grpc.NewServer()
 
-	cityServer := controllers.City{}
+	cityServer := controllers.City{DB: db}
 	cities.RegisterCitiesServiceServer(grpcServer, &cityServer)
 
 	fmt.Println("running server grpc")

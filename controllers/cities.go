@@ -27,9 +27,22 @@ func (s *City) GetCity(ctx context.Context, in *cities.Id) (*cities.City, error)
 }
 
 func (s *City) GetCities(in *cities.EmptyMessage, stream cities.CitiesService_GetCitiesServer) error {
-	for i := 1; i < 50; i++ {
+	query := `SELECT id, name FROM cities`
+	row, err := s.DB.Query(query)
+	if err != nil {
+		return err
+	}
+	defer row.Close()
+
+	for row.Next() {
+		var city cities.City
+		err = row.Scan(&city.Id, &city.Name)
+		if err != nil {
+			return err
+		}
+
 		res := &cities.CitiesStream{
-			City: &cities.City{Id: int32(i), Name: "Jakarta"},
+			City: &city,
 		}
 
 		err := stream.Send(res)
@@ -37,6 +50,7 @@ func (s *City) GetCities(in *cities.EmptyMessage, stream cities.CitiesService_Ge
 			return status.Errorf(codes.Unknown, "cannot send stream response: %v", err)
 		}
 	}
+
 	return nil
 }
 

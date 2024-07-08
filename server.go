@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 	"unsia/controllers"
 	"unsia/pb/cities"
 	database "unsia/pkg/db"
@@ -18,6 +19,9 @@ func main() {
 		fmt.Printf("failed to listen: %v", err)
 		return
 	}
+
+	// Logging
+	log := log.New(os.Stdout, "Unsia-Go : ", log.LstdFlags|log.Lmicroseconds|log.Lshortfile)
 
 	db, err := database.OpenDB()
 	if err != nil {

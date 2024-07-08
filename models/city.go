@@ -65,3 +65,28 @@ func (u *City) Delete(ctx context.Context, db *sql.DB, in *cities.Id) error {
 	return nil
 
 }
+
+func (u *City) Update(ctx context.Context, db *sql.DB, in *cities.City) error {
+	query := `UPDATE cities SET name = $1 WHERE id = $2`
+	stmt, err := db.PrepareContext(ctx, query)
+	if err != nil {
+		return err
+	}
+	res, err := stmt.ExecContext(ctx, in.Name, in.Id)
+	if err != nil {
+		return err
+	}
+
+	affected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affected == 0 {
+		return fmt.Errorf("data not found!")
+	}
+
+	u.Pb.Id = in.Id
+	u.Pb.Name = in.Name
+
+	return nil
+}
